@@ -34,7 +34,9 @@ jobs:
 
     - name: Build TestU01 Statistical Test Suite
       run: |
-        sudo apt install testu01-bin testu01-data
+        sudo apt install testu01-bin testu01-data libtestu01-0-dev
+        echo "================================================="
+        apt search testu01
         cd TestU01
         make
 
