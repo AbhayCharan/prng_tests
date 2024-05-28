@@ -41,8 +41,10 @@ jobs:
 
 
     - name: Return back to working directory
-      run: cd ..
-      printf '%s\n' "$action_state" # This will output 'yellow'
+      run: | 
+        cd ..
+        printf '%s\n' "$action_state" # This will output 'yellow'
+        pwd
 
 
     - name: Build NIST Statistical Test Suite
