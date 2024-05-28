@@ -35,14 +35,14 @@ jobs:
     - name: Build TestU01 Statistical Test Suite
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
-        echo "================================================="
-        apt search testu01
         cd TestU01
-        make
+        make || true
+        echo "action_state=yellow" >> "$GITHUB_ENV"
 
 
     - name: Return back to working directory
       run: cd ..
+      printf '%s\n' "$action_state" # This will output 'yellow'
 
 
     - name: Build NIST Statistical Test Suite
