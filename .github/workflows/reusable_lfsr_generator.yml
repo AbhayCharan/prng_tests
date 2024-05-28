@@ -33,27 +33,22 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build TestU01 Statistical Test Suite
+      working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
-        cd TestU01
         make || true
         echo "action_state=yellow" >> "$GITHUB_ENV"
-
-
-    - name: Return back to working directory
-      run: | 
-        cd ..
-        printf '%s\n' "$action_state" # This will output 'yellow'
         pwd
 
-
     - name: Build NIST Statistical Test Suite
+      working-directory: ./NIST
       run: |
-        cd NIST
+        printf '%s\n' "$action_state" # This will output 'yellow'
         make rebuild
         echo "================================================================="
 
     - name: Run NIST Statistical Test Suite with ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}}"
+      working-directory: ./NIST
       run: |
         pwd
         ls -la
@@ -66,6 +61,7 @@ jobs:
         path: './experiments/${{inputs.test_dir}}/'
 
     - name: Show error status
+      working-directory: ./NIST
       run: |
         LOGFILE="found.log"
         DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
@@ -75,6 +71,7 @@ jobs:
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Configuration
+      working-directory: ./NIST
       run: |
         echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
         cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
@@ -84,6 +81,7 @@ jobs:
         echo "__Stream length__ (length of one Sequence) : ${{inputs.stream_length}}" >> $GITHUB_STEP_SUMMARY
 
     - name: Show Stats and Analysis Report
+      working-directory: ./NIST
       run: |
         echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
         cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY
