@@ -51,9 +51,13 @@ jobs:
       run: |
         cd NIST
         make rebuild
+        echo "================================================================="
 
     - name: Run NIST Statistical Test Suite with ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}}"
-      run:  /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.stream_number}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.stream_length}} || true
+      run: |
+        pwd
+        ls -la
+        /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.stream_number}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.stream_length}} || true
 
     - name: Upload results to Job artifact
       uses: actions/upload-artifact@v4
