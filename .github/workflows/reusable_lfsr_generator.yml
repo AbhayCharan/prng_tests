@@ -1,0 +1,85 @@
+name: "Reusable LFSR generator"
+
+on:
+  workflow_call:
+    inputs:
+      stream_length:
+        description: 'Stream length (length of one Sequence)'
+        required: true
+        type: string
+      stream_number:
+        description: 'Bitstreams (number of Sequences)'
+        required: true
+        type: string
+      test_num:
+        description: 'Test number'
+        required: true
+        type: string
+      test_dir:
+        description: 'Directory name'
+        required: true
+        type: string
+
+env:
+  LOG_FILE: "stat.log"
+
+jobs:
+  main:
+    name: Test the PRNG
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Build TestU01 Statistical Test Suite
+      run: |
+        sudo apt install testu01-bin testu01-data
+        cd TestU01
+        make
+
+
+    - name: Return back to working directory
+      run: cd ..
+
+
+    - name: Build NIST Statistical Test Suite
+      run: |
+        cd NIST
+        make rebuild
+
+    - name: Run NIST Statistical Test Suite with ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}}"
+      run:  /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.stream_number}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.stream_length}} || true
+
+    - name: Upload results to Job artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Results_${{inputs.test_dir}}_${{inputs.stream_length}}_${{inputs.stream_number}}'
+        path: './experiments/${{inputs.test_dir}}/'
+
+    - name: Show error status
+      run: |
+        LOGFILE="found.log"
+        DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
+        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$12 == "*" || $13 == "*" { print "FOUND"}' > $LOGFILE
+        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$14 == "*" { print "FOUND"}' >> $LOGFILE
+        ERRORS=$(cat $LOGFILE | wc -l)
+        if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+
+    - name: Show Configuration
+      run: |
+        echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
+        cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
+        echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
+        cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
+        echo "__Bitstreams__ (number of Sequences) : ${{inputs.stream_number}}" >> $GITHUB_STEP_SUMMARY
+        echo "__Stream length__ (length of one Sequence) : ${{inputs.stream_length}}" >> $GITHUB_STEP_SUMMARY
+
+    - name: Show Stats and Analysis Report
+      run: |
+        echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
+        cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY
+        echo "**finalAnalysisReport.txt** :" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat ./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
