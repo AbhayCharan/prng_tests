@@ -38,12 +38,14 @@ jobs:
         uname -a >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
 
-    - name: Build TestU01 Statistical Test Suite
+    - name: Run TestU01 with ${{inputs.generator_name}} and ${{inputs.battery_name}}"
       working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
         sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^#//g' Makefile     # to uncomment
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        cat Makefile
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
         make  >> $GITHUB_STEP_SUMMARY || true
@@ -56,7 +58,6 @@ jobs:
       working-directory: ./NIST
       run: |
         printf '%s\n' "$action_state" # This will output 'yellow'
-        make rebuild
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
 
     - name: Run NIST Statistical Test Suite with ${{inputs.generator_name}} bitstreams of length ${{inputs.battery_name}}"
