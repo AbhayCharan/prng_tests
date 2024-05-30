@@ -1,0 +1,103 @@
+name: "Reusable TestU01"
+
+on:
+  workflow_call:
+    inputs:
+      bbattery_TestName:
+        description: 'Predefined batteries of statistical tests'
+        required: true
+        type: string
+      generator_name:
+        description: 'Pseudo Random Number Generator'
+        required: true
+        type: string
+      test_num:
+        description: 'Test number'
+        required: true
+        type: string
+      test_dir:
+        description: 'Directory name'
+        required: true
+        type: string
+
+env:
+  LOG_FILE: "stat.log"
+
+jobs:
+  main:
+    name: Test the PRNG
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Build PractRand Statistical Test Suite
+      run: |
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        uname -a >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
+    - name: Build TestU01 Statistical Test Suite
+      working-directory: ./TestU01
+      run: |
+        sudo apt install testu01-bin testu01-data libtestu01-0-dev
+        #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
+        sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^#//g' Makefile     # to uncomment
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        make  >> $GITHUB_STEP_SUMMARY || true
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        echo "action_state=yellow" >> "$GITHUB_ENV"
+        pwd
+
+    - name: Build NIST Statistical Test Suite
+      working-directory: ./NIST
+      run: |
+        printf '%s\n' "$action_state" # This will output 'yellow'
+        make rebuild
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+
+    - name: Run NIST Statistical Test Suite with ${{inputs.generator_name}} bitstreams of length ${{inputs.bbattery_TestName}}"
+      working-directory: ./NIST
+      run: |
+        pwd
+        ls -la
+        /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.generator_name}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.bbattery_TestName}} || true
+
+    - name: Upload results to Job artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Results_${{inputs.test_dir}}_${{inputs.bbattery_TestName}}_${{inputs.generator_name}}'
+        path: './experiments/${{inputs.test_dir}}/'
+
+    - name: Show error status
+      working-directory: ./NIST
+      run: |
+        LOGFILE="found.log"
+        DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
+        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$12 == "*" || $13 == "*" { print "FOUND"}' > $LOGFILE
+        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$14 == "*" { print "FOUND"}' >> $LOGFILE
+        ERRORS=$(cat $LOGFILE | wc -l)
+        if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+
+    - name: Show Configuration
+      working-directory: ./NIST
+      run: |
+        echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
+        cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
+        echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
+        cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
+        echo "__Bitstreams__ (number of Sequences) : ${{inputs.generator_name}}" >> $GITHUB_STEP_SUMMARY
+        echo "__Stream length__ (length of one Sequence) : ${{inputs.bbattery_TestName}}" >> $GITHUB_STEP_SUMMARY
+
+    - name: Show Stats and Analysis Report
+      working-directory: ./NIST
+      run: |
+        echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
+        cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY
+        echo "**finalAnalysisReport.txt** :" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat ./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
