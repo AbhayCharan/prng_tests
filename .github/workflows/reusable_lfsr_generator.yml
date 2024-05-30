@@ -48,7 +48,9 @@ jobs:
       working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
-        make || true
+        echo "================================================================="
+        make  >> $GITHUB_STEP_SUMMARY || true
+        echo "================================================================="
         echo "action_state=yellow" >> "$GITHUB_ENV"
         pwd
 
