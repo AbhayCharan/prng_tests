@@ -72,10 +72,12 @@ jobs:
       run: |
         LOGFILE="found.log"
         touch $LOGFILE
-        ls -la .
         cat ${{env.LOG_FILE}} | grep "unusual"  >> $LOGFILE
+        echo "before ERRORS"
         ERRORS=$(cat $LOGFILE | wc -l)
+        echo "ERRORS = $ERRORS"
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+        ls -la .
         #if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Stats and Analysis Report
