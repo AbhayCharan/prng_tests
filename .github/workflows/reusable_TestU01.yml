@@ -46,24 +46,16 @@ jobs:
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
         sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^#//g' Makefile     # to uncomment
-        echo "================================================================="
-        cat Makefile
-        echo "================================================================="
         #make  >> $GITHUB_STEP_SUMMARY || true
         /usr/bin/time -o ${{env.LOG_FILE}} -p make || true
+
         echo "action_state=yellow" >> "$GITHUB_ENV"
         printf '%s\n' "$action_state" # This will output 'yellow'
-        pwd
-        echo "================================================================="
-        ls -la .
-        echo "================================================================="
-        ls -la ../
-        echo "================================================================="
 
     - name: Upload results to Job artifact
       uses: actions/upload-artifact@v4
       with:
-        name: 'Full log file ${{inputs.generator_name}}.res'
+        name: 'Full log file ${{inputs.generator_name}}.res archive'
         path: './TestU01/${{inputs.generator_name}}.res'
 
     - name: Show error status

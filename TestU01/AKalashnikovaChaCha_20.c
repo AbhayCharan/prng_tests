@@ -6,15 +6,9 @@ uint32_t chacha20_random (void);
 
 int main (void)
 {
-   printf("sizeof(unsigned int) = %ld\n", sizeof(unsigned int));
-   printf("sizeof(uint32_t) = %ld\n", sizeof(uint32_t));
-   //printf("\n====================================================== ??????????????????????? OK !!!!!!\n");
+   unif01_Gen *gen = unif01_CreateExternGenBits ("AKalashnikova ChaCha20 additional", chacha20_random);
 
-   unif01_Gen *gen;
-
-   gen = unif01_CreateExternGenBits ("AKalashnikova chacha20_random", chacha20_random);
    bbattery_SmallCrush (gen);
-   //bbattery_Crush (gen);
 
    unif01_DeleteExternGenBits (gen);
 

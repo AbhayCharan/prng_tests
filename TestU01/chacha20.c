@@ -197,7 +197,6 @@ uint32_t chacha20_32_random (struct chacha20_context *ctx)
 
     if (ctx->position == -1)
     {
-        //chacha20_init_context(ctx, uint8_t key[], uint8_t nonce[], uint64_t counter);
         chacha20_init_context(ctx, key, iv, 1);
         printf("\n====================================================== initialization OK ====================================\n");
         chacha20_block_next(ctx);
