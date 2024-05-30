@@ -17,7 +17,7 @@ on:
         required: true
         default: 'AKalashnikovaChaCha20'
         type: choice
-        options: ['AKalashnikovaChaCha20', 'AKalashnikovaXChaCha20', 'AKalashnikovaChaCha20_b', 'AKalashnikovaGaloisLeftLFSR', 'AKalashnikovaGaloisRightLFSR']
+        options: ['AKalashnikovaChaCha20', 'AKalashnikovaXChaCha20', 'AKalashnikovaChaCha_20', 'AKalashnikovaGaloisLeftLFSR', 'AKalashnikovaGaloisRightLFSR']
 
 env:
   TEST_NUM: "10"

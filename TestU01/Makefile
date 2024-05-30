@@ -28,7 +28,7 @@ default: all
 
 #PROGRAMS = AKalashnikovaChaCha20
 #PROGRAMS = AKalashnikovaXChaCha20
-#PROGRAMS = AKalashnikovaChaCha20_b
+#PROGRAMS = AKalashnikovaChaCha_20
 #PROGRAMS = AKalashnikovaGaloisLeftLFSR
 #PROGRAMS = AKalashnikovaGaloisRightLFSR
 
@@ -51,7 +51,7 @@ AKalashnikovaGaloisLeftLFSR: AKalashnikovaGaloisLeftLFSR.c galoisLeftLFSR.c
 AKalashnikovaGaloisRightLFSR: AKalashnikovaGaloisRightLFSR.c galoisRightLFSR.c
 AKalashnikovaChaCha20: AKalashnikovaChaCha20.c chacha20.c
 AKalashnikovaXChaCha20: AKalashnikovaXChaCha20.c xchacha20.c
-AKalashnikovaChaCha20_b: AKalashnikovaChaCha20_b.c chacha20_.c
+AKalashnikovaChaCha_20: AKalashnikovaChaCha_20.c chacha20_.c
 
 all: build check
 

@@ -27,6 +27,9 @@ jobs:
   main:
     name: Test the PRNG
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./TestU01
 
     steps:
     - name: Checkout
@@ -39,66 +42,48 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
 
     - name: Run TestU01 with ${{inputs.generator_name}} and ${{inputs.battery_name}}"
-      working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
         sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^#//g' Makefile     # to uncomment
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        echo "================================================================="
         cat Makefile
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        make  >> $GITHUB_STEP_SUMMARY || true
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        echo "================================================================="
+        #make  >> $GITHUB_STEP_SUMMARY || true
+        /usr/bin/time -o ${{env.LOG_FILE}} -p make || true
         echo "action_state=yellow" >> "$GITHUB_ENV"
-        pwd
-
-    - name: Build NIST Statistical Test Suite
-      working-directory: ./NIST
-      run: |
         printf '%s\n' "$action_state" # This will output 'yellow'
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
-
-    - name: Run NIST Statistical Test Suite with ${{inputs.generator_name}} bitstreams of length ${{inputs.battery_name}}"
-      working-directory: ./NIST
-      run: |
         pwd
-        ls -la
-        /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.generator_name}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.battery_name}} || true
 
     - name: Upload results to Job artifact
       uses: actions/upload-artifact@v4
       with:
-        name: 'Results_${{inputs.test_dir}}_${{inputs.battery_name}}_${{inputs.generator_name}}'
-        path: './experiments/${{inputs.test_dir}}/'
+        name: '${{inputs.generator_name}}.res'
+        path: '${{inputs.generator_name}}.res'
 
-    - name: Show error status
-      working-directory: ./NIST
-      run: |
-        LOGFILE="found.log"
-        DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
-        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$12 == "*" || $13 == "*" { print "FOUND"}' > $LOGFILE
-        sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$14 == "*" { print "FOUND"}' >> $LOGFILE
-        ERRORS=$(cat $LOGFILE | wc -l)
-        if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+      #- name: Show error status
+      #run: |
+      #  LOGFILE="found.log"
+      #  DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
+      #  sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$12 == "*" || $13 == "*" { print "FOUND"}' > $LOGFILE
+      #  sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$14 == "*" { print "FOUND"}' >> $LOGFILE
+      #  ERRORS=$(cat $LOGFILE | wc -l)
+      #  if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
-    - name: Show Configuration
-      working-directory: ./NIST
-      run: |
-        echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
-        cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
-        echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
-        cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
-        echo "__Bitstreams__ (number of Sequences) : ${{inputs.generator_name}}" >> $GITHUB_STEP_SUMMARY
-        echo "__Stream length__ (length of one Sequence) : ${{inputs.battery_name}}" >> $GITHUB_STEP_SUMMARY
+      #- name: Show Configuration
+      #run: |
+      #  echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
+      #  cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
+      #  echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
+      #  cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
+      #  echo "__Bitstreams__ (number of Sequences) : ${{inputs.generator_name}}" >> $GITHUB_STEP_SUMMARY
+      #  echo "__Stream length__ (length of one Sequence) : ${{inputs.battery_name}}" >> $GITHUB_STEP_SUMMARY
 
     - name: Show Stats and Analysis Report
-      working-directory: ./NIST
       run: |
         echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
         cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY
-        echo "**finalAnalysisReport.txt** :" >> $GITHUB_STEP_SUMMARY
+        echo "**${{inputs.generator_name}}.res** :" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
-        cat ./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt >> $GITHUB_STEP_SUMMARY
+        cat ${{inputs.generator_name}}.res >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
