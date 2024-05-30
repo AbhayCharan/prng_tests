@@ -208,7 +208,7 @@ uint32_t chacha20_32_random (struct chacha20_context *ctx)
 		chacha20_block_next(ctx);
 		ctx->position = 0;
 	}
-	res = &keystream8[ctx->position]; // or ctx->keystream32[ ctx->position/4 ]
+	res = (uint32_t *) &keystream8[ctx->position]; // or ctx->keystream32[ ctx->position/4 ]
 	ctx->position += 4;
 
     return *res;

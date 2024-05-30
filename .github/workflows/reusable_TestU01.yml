@@ -35,12 +35,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build PractRand Statistical Test Suite
-      run: |
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        uname -a >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-
     - name: Run TestU01 ${{inputs.generator_name}} with ${{inputs.battery_name}}"
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
@@ -63,17 +57,10 @@ jobs:
         cat ./AKalashnikova${{inputs.generator_name}}.res | grep "All tests were passed"
         if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; fi
 
-      #- name: Show Configuration
-      #run: |
-      #  echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
-      #  cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
-      #  echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
-      #  cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
-      #  echo "__Bitstreams__ (number of Sequences) : ${{inputs.generator_name}}" >> $GITHUB_STEP_SUMMARY
-      #  echo "__Stream length__ (length of one Sequence) : ${{inputs.battery_name}}" >> $GITHUB_STEP_SUMMARY
-
     - name: Show Stats and Analysis Report
       run: |
+        echo "**System** :" >> $GITHUB_STEP_SUMMARY
+        uname -a >> $GITHUB_STEP_SUMMARY
         echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
         cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY
         echo "**Full log** :" >> $GITHUB_STEP_SUMMARY
