@@ -40,12 +40,12 @@ jobs:
         cd PractRand
         CXX=g++-12 CXXFLAGS="-std=c++2a -O3" ./configure
         make
-        ./RNG_test chacha -tlmax 1G | tee ${{env.LOG_FILE}}
+        ./RNG_test ${{inputs.generator_name}} -tlmax 1G | tee ${{env.LOG_FILE}}
 
         #git clone https://github.com/tylov-fork/PractRand.git # with GNUmakefile to build/Linux/
         #cd PractRand
         #make
-        #build/Linux/bin/RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
+        #build/Linux/bin/RNG_test ${{inputs.generator_name}} -tlmax 1G  >> $GITHUB_STEP_SUMMARY
 
         #git clone https://github.com/MartyMacGyver/PractRand.git
         #cd PractRand
@@ -55,7 +55,7 @@ jobs:
         #g++ -o RNG_benchmark tools/RNG_benchmark.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
         #g++ -o RNG_output tools/RNG_output.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
         #echo '```' >> $GITHUB_STEP_SUMMARY
-        #./RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
+        #./RNG_test ${{inputs.generator_name}} -tlmax 1G  >> $GITHUB_STEP_SUMMARY
         #echo '```' >> $GITHUB_STEP_SUMMARY
 
         echo "action_state=yellow" >> "$GITHUB_ENV"
@@ -70,6 +70,8 @@ jobs:
     - name: Show error status
       working-directory: ./PractRand
       run: |
+        ls -la .
+        pwd
         LOGFILE="found.log"
         cat ${{env.LOG_FILE}} | grep "unusual"  >> $LOGFILE
         ERRORS=$(cat $LOGFILE | wc -l)

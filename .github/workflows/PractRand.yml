@@ -15,9 +15,9 @@ on:
         description: >
           Pseudo Random Number Generator ./RNG_test hc256 -tlmin 1KB  -multithreaded
         required: true
-        default: 'ChaCha20'
+        default: 'chacha'
         type: choice
-        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
+        options: ['arbee', 'chacha', 'efiix', 'hc256', 'isaac', 'jsf', 'mt19937', 'rarns', 'salsa', 'sfc', 'sha2_based_pool', 'trivium', 'xsm' ]
 
 env:
   TEST_NUM: "10"
