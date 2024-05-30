@@ -15,13 +15,13 @@ on:
         description: >
           Pseudo Random Number Generator
         required: true
-        default: 'AKalashnikovaChaCha20'
+        default: 'ChaCha20'
         type: choice
-        options: ['AKalashnikovaChaCha20', 'AKalashnikovaXChaCha20', 'AKalashnikovaChaCha_20', 'AKalashnikovaGaloisLeftLFSR', 'AKalashnikovaGaloisRightLFSR']
+        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
 
 env:
   TEST_NUM: "10"
-  DIR_NAME: "AKalashnikovaFibonacciLFSR"
+  DIR_NAME: "AKalashnikova"
 
 jobs:
   prepare:
