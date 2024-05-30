@@ -1,5 +1,5 @@
 name: "PractRand"
-run-name: "PractRand ${{inputs.battery_name}} battery run with ${{inputs.generator_name}}"
+run-name: "PractRand ${{inputs.battery_name}} MAX run with ${{inputs.generator_name}}"
 
 on:
   workflow_dispatch:
@@ -8,12 +8,12 @@ on:
         description: >
           Predefined batteries of statistical tests
         required: true
-        default: 'SmallCrush'
+        default: '1G'
         type: choice
-        options: ['SmallCrush', 'Crush', 'BigCrush', 'FIPS_140_2', 'PseudoDIEHARD']
+        options: ['1G', '10G', '100G', '1T', '10T', '100T']
       generator_name:
         description: >
-          Pseudo Random Number Generator ./RNG_test hc256 -tlmin 1KB  -multithreaded
+          Pseudo Random Number Generator
         required: true
         default: 'chacha'
         type: choice
