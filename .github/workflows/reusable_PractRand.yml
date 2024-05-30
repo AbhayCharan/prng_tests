@@ -70,9 +70,9 @@ jobs:
     - name: Show error status
       working-directory: ./PractRand
       run: |
-        ls -la .
-        pwd
         LOGFILE="found.log"
+        touch $LOG_FILE
+        ls -la .
         cat ${{env.LOG_FILE}} | grep "unusual"  >> $LOGFILE
         ERRORS=$(cat $LOGFILE | wc -l)
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
