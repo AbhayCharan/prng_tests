@@ -34,8 +34,9 @@ jobs:
 
     - name: Build PractRand Statistical Test Suite
       run: |
+        echo '```' >> $GITHUB_STEP_SUMMARY
         uname -a >> $GITHUB_STEP_SUMMARY
-        echo "=" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         #git clone https://github.com/planet36/PractRand.git # Fork of PractRand-pre0.95 with many warnings fixed
         #cd PractRand
@@ -56,14 +57,18 @@ jobs:
         g++ -o RNG_test tools/RNG_test.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
         g++ -o RNG_benchmark tools/RNG_benchmark.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
         g++ -o RNG_output tools/RNG_output.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
+        echo '```' >> $GITHUB_STEP_SUMMARY
         ./RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
 
     - name: Build TestU01 Statistical Test Suite
       working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
         make  >> $GITHUB_STEP_SUMMARY || true
+        echo '```' >> $GITHUB_STEP_SUMMARY
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         echo "action_state=yellow" >> "$GITHUB_ENV"
         pwd
