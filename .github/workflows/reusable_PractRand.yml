@@ -69,8 +69,10 @@ jobs:
 
     - name: Show error status
       run: |
-        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual" || echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY
-        if [ $? -eq 0 ]; then echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
+        LOGFILE="found.log"
+        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual" > $LOGFILE
+        ERRORS=$(cat $LOGFILE | wc -l)
+        if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Stats and Analysis Report
       working-directory: ./PractRand
