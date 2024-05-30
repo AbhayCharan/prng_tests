@@ -3,7 +3,7 @@ name: "Reusable TestU01"
 on:
   workflow_call:
     inputs:
-      bbattery_TestName:
+      battery_name:
         description: 'Predefined batteries of statistical tests'
         required: true
         type: string
@@ -59,17 +59,17 @@ jobs:
         make rebuild
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
 
-    - name: Run NIST Statistical Test Suite with ${{inputs.generator_name}} bitstreams of length ${{inputs.bbattery_TestName}}"
+    - name: Run NIST Statistical Test Suite with ${{inputs.generator_name}} bitstreams of length ${{inputs.battery_name}}"
       working-directory: ./NIST
       run: |
         pwd
         ls -la
-        /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.generator_name}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.bbattery_TestName}} || true
+        /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.generator_name}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.battery_name}} || true
 
     - name: Upload results to Job artifact
       uses: actions/upload-artifact@v4
       with:
-        name: 'Results_${{inputs.test_dir}}_${{inputs.bbattery_TestName}}_${{inputs.generator_name}}'
+        name: 'Results_${{inputs.test_dir}}_${{inputs.battery_name}}_${{inputs.generator_name}}'
         path: './experiments/${{inputs.test_dir}}/'
 
     - name: Show error status
@@ -90,7 +90,7 @@ jobs:
         echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
         cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
         echo "__Bitstreams__ (number of Sequences) : ${{inputs.generator_name}}" >> $GITHUB_STEP_SUMMARY
-        echo "__Stream length__ (length of one Sequence) : ${{inputs.bbattery_TestName}}" >> $GITHUB_STEP_SUMMARY
+        echo "__Stream length__ (length of one Sequence) : ${{inputs.battery_name}}" >> $GITHUB_STEP_SUMMARY
 
     - name: Show Stats and Analysis Report
       working-directory: ./NIST

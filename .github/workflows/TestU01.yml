@@ -1,10 +1,10 @@
 name: "TestU01"
-run-name: "TestU01 ${{inputs.bbattery_TestName}} battery run with ${{inputs.generator_name}}"
+run-name: "TestU01 ${{inputs.battery_name}} battery run with ${{inputs.generator_name}}"
 
 on:
   workflow_dispatch:
     inputs:
-      bbattery_TestName:
+      battery_name:
         description: >
           Predefined batteries of statistical tests
         required: true
@@ -15,7 +15,7 @@ on:
         description: >
           Pseudo Random Number Generator
         required: true
-        default: '10'
+        default: 'AKalashnikovaChaCha20'
         type: choice
         options: ['AKalashnikovaChaCha20', 'AKalashnikovaXChaCha20', 'AKalashnikovaChaCha20_', 'AKalashnikovaGaloisLeftLFSR', 'AKalashnikovaGaloisRightLFSR']
 
@@ -36,10 +36,10 @@ jobs:
 
   main:
     name: Run test with the parameters
-    uses: ./.github/workflows/reusable_lfsr_generator.yml
+    uses: ./.github/workflows/reusable_TestU01.yml
     needs: prepare
     with:
       test_num: ${{needs.prepare.outputs.test_num}}
       test_dir: ${{needs.prepare.outputs.test_dir}}
-      bbattery_TestName: ${{inputs.bbattery_TestName}}
+      battery_name: ${{inputs.battery_name}}
       generator_name: ${{inputs.generator_name}}
