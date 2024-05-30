@@ -1,4 +1,4 @@
-name: "Reusable LFSR generator"
+name: "_Reusable LFSR generator"
 
 on:
   workflow_call:
