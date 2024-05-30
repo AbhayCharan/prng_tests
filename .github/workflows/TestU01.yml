@@ -10,7 +10,7 @@ on:
         required: true
         default: 'SmallCrush'
         type: choice
-        options: ['SmallCrush', 'Crush', 'BigCrush', 'FIPS_140_2', 'PseudoDIEHARD']
+        options: ['SmallCrush', 'Crush', 'BigCrush', 'FIPS_140_2', 'pseudoDIEHARD']
       generator_name:
         description: >
           Pseudo Random Number Generator
