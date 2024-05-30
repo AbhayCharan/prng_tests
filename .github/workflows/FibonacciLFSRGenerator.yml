@@ -18,7 +18,7 @@ on:
           NOTE: For Significance level = 0.001, a sample should have at least 1000 sequences!
           The sample should be on the order of the inverse of the significance level (α^-1).
         required: true
-        default: '1000'
+        default: '10'
         type: choice
         options: ['1', '10', '100', '1000']
 

@@ -32,6 +32,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Build PractRand Statistical Test Suite
+      working-directory: ./TestU01
+      run: |
+        #sudo apt install testu01-bin testu01-data libtestu01-0-dev
+        #make || true
+        #echo "action_state=yellow" >> "$GITHUB_ENV"
+        git clone https://github.com/planet36/PractRand.git
+        pwd
+        cd PractRand-main
+        CXXFLAGS="-std=c++2a -O3" ./configure
+        make
+        ./RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
+
     - name: Build TestU01 Statistical Test Suite
       working-directory: ./TestU01
       run: |
