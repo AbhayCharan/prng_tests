@@ -68,9 +68,8 @@ jobs:
         path: './PractRand/${{env.LOG_FILE}}'
 
     - name: Show error status
-      working-directory: ./PractRand
       run: |
-        cat ${{env.LOG_FILE}} | grep "unusual"
+        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual"
         if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Stats and Analysis Report
