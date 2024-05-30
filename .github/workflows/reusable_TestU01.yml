@@ -54,8 +54,8 @@ jobs:
 
     - name: Show error status
       run: |
-        cat ./AKalashnikova${{inputs.generator_name}}.res | grep "All tests were passed" || echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY
-        if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+        cat ./AKalashnikova${{inputs.generator_name}}.res | grep "All tests were passed"
+        if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Stats and Analysis Report
       run: |
