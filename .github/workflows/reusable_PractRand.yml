@@ -38,7 +38,7 @@ jobs:
         sudo apt install g++-12
         git clone https://github.com/planet36/PractRand.git # Fork of PractRand-pre0.95 with many warnings fixed
         cd PractRand
-        CXXFLAGS="-std=c++2a -O3" ./configure
+        CXX=g++-12 CXXFLAGS="-std=c++2a -O3" ./configure
         make
         ./RNG_test chacha -tlmax 1G | tee ${{env.LOG_FILE}}
 

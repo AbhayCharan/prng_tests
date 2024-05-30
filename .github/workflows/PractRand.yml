@@ -13,7 +13,7 @@ on:
         options: ['SmallCrush', 'Crush', 'BigCrush', 'FIPS_140_2', 'PseudoDIEHARD']
       generator_name:
         description: >
-          Pseudo Random Number Generator
+          Pseudo Random Number Generator ./RNG_test hc256 -tlmin 1KB  -multithreaded
         required: true
         default: 'ChaCha20'
         type: choice
