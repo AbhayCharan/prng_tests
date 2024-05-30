@@ -54,21 +54,22 @@ jobs:
         echo "action_state=yellow" >> "$GITHUB_ENV"
         printf '%s\n' "$action_state" # This will output 'yellow'
         pwd
+        echo "================================================================="
+        ls -la .
+        echo "================================================================="
+        ls -la ../
+        echo "================================================================="
 
     - name: Upload results to Job artifact
       uses: actions/upload-artifact@v4
       with:
-        name: '${{inputs.generator_name}}.res'
-        path: '${{inputs.generator_name}}.res'
+        name: 'Full log file ${{inputs.generator_name}}.res'
+        path: './TestU01/${{inputs.generator_name}}.res'
 
-      #- name: Show error status
-      #run: |
-      #  LOGFILE="found.log"
-      #  DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
-      #  sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$12 == "*" || $13 == "*" { print "FOUND"}' > $LOGFILE
-      #  sed -nE '/^[0-9]|^ [0-9]/p' < $DATAFILE | awk '$14 == "*" { print "FOUND"}' >> $LOGFILE
-      #  ERRORS=$(cat $LOGFILE | wc -l)
-      #  if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+    - name: Show error status
+      run: |
+        cat ./${{inputs.generator_name}}.res | grep "All tests were passed"
+        if [ $? -eq 0 ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; fi
 
       #- name: Show Configuration
       #run: |

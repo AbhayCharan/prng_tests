@@ -38,9 +38,6 @@ RESULTFILES = \
 DISTCLEANFILES = \
 	$(PDFSCRAPFILES)
 
-MAINTAINERCLEANFILES = \
-	RandomOrg.pts
-
 LDLIBS = -ltestu01
 
 ex3: ex3.c my16807.c my16807.h
@@ -71,9 +68,6 @@ clean: mostlyclean checkclean
 
 distclean: clean
 	$(RM) $(DISTCLEANFILES)
-
-maintainer-clean: distclean
-	$(RM) $(MAINTAINERCLEANFILES)
 
 %.res : %
 	./$< | tee $@
