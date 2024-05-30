@@ -40,6 +40,7 @@ jobs:
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
         sed -i '/PROGRAMS = AKalashnikova${{inputs.generator_name}}/s/^#//g' Makefile     # to uncomment
+        sed -i 's/bbattery_%%BATT_NAME%%/bbattery_${{inputs.battery_name}}/' AKalashnikova${{inputs.generator_name}}.c
         #make  >> $GITHUB_STEP_SUMMARY || true
         /usr/bin/time -o ${{env.LOG_FILE}} -p make || true
 

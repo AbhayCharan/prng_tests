@@ -10,7 +10,7 @@ int main (void)
 
    //gen = unif01_CreateExternGenBitsL ("AKalashnikovaGaloisLeftLFSR", AKalashnikovaGaloisLeftLFSR);
 
-   bbattery_SmallCrush (gen);
+   bbattery_%%BATT_NAME%% (gen);
 
    unif01_DeleteExternGenBits (gen);
 

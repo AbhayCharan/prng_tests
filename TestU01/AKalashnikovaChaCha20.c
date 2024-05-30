@@ -8,7 +8,7 @@ int main (void)
 {
    unif01_Gen *gen = unif01_CreateExternGenBits ("AKalashnikova ChaCha20", chacha32_random);
 
-   bbattery_SmallCrush (gen);
+   bbattery_%%BATT_NAME%% (gen);
 
    unif01_DeleteExternGenBits (gen);
 
