@@ -1,4 +1,4 @@
-name: "Reusable TestU01"
+name: "_Reusable TestU01"
 
 on:
   workflow_call:
