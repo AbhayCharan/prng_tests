@@ -34,6 +34,8 @@ jobs:
 
     - name: Build PractRand Statistical Test Suite
       run: |
+        uname -a >> $GITHUB_STEP_SUMMARY
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         #sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #make || true
         #echo "action_state=yellow" >> "$GITHUB_ENV"
@@ -48,9 +50,9 @@ jobs:
       working-directory: ./TestU01
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
-        echo "================================================================="
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         make  >> $GITHUB_STEP_SUMMARY || true
-        echo "================================================================="
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
         echo "action_state=yellow" >> "$GITHUB_ENV"
         pwd
 
@@ -59,7 +61,7 @@ jobs:
       run: |
         printf '%s\n' "$action_state" # This will output 'yellow'
         make rebuild
-        echo "================================================================="
+        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
 
     - name: Run NIST Statistical Test Suite with ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}}"
       working-directory: ./NIST
