@@ -1,4 +1,4 @@
-name: "[11] Galois Right LFSR generator"
+name: "NIST"
 run-name: "[11] Galois Right LFSR with ${{inputs.stream_number}} sequences of length ${{inputs.stream_length}} Test Suite run"
 
 on:
@@ -39,7 +39,7 @@ jobs:
 
   main:
     name: Run test with the parameters
-    uses: ./.github/workflows/reusable_lfsr_generator.yml
+    uses: ./.github/workflows/reusable_NIST.yml
     needs: prepare
     with:
       test_num: ${{needs.prepare.outputs.test_num}}

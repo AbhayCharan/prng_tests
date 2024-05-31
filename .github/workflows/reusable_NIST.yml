@@ -1,4 +1,4 @@
-name: "_Reusable LFSR generator"
+name: "_Reusable NIST"
 
 on:
   workflow_call:
