@@ -471,8 +471,8 @@ SHA1()
 // Працюємо з 64-бітовим регістром зсуву та відвідною послідовністю [59, 60, 62, 63].
 //ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
 //ULONG LFSR_GAMMA = 0xaaaaaaaaaaaaaaaa; // initialize LFSR register
-ULONG LFSR_GAMMA =   0x0af944215c1040f7; // initialize LFSR register by Prime numbers:
-                                         // 0x0f6b75ab2bc471c7
+ULONG LFSR_GAMMA =   0x0f6b75ab2bc471c7; // initialize LFSR register by Prime numbers:
+                                         // 0x0af944215c1040f7
                                          // 0x0c9dbd5d80e68ba3
                                          // 0x0aaaaaaaaaaaaaab
 

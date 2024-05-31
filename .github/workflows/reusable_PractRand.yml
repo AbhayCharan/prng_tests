@@ -40,7 +40,7 @@ jobs:
         cd PractRand
         CXX=g++-12 CXXFLAGS="-std=c++2a -O3" ./configure
         make
-        ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -multithreaded | tee ${{env.LOG_FILE}}
+        ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
 
         #git clone https://github.com/tylov-fork/PractRand.git # with GNUmakefile to build/Linux/
         #cd PractRand
