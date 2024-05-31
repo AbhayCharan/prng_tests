@@ -57,7 +57,7 @@ jobs:
       run: |
         if [ ${{inputs.battery_name}} = "SmallCrush" ] || [ ${{inputs.battery_name}} = "Crush" ] || [ ${{inputs.battery_name}} = "BigCrush" ]; then
           LOGFILE="found.log"
-          cat ./AKalashnikova${{inputs.generator_name}}.res | grep "All tests were passed" || true > $LOGFILE
+          cat ./AKalashnikova${{inputs.generator_name}}.res | grep "All tests were passed" > $LOGFILE || true
           if [ -s ${LOGFILE} ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
         fi
         pwd

@@ -70,7 +70,7 @@ jobs:
     - name: Show error status
       run: |
         LOGFILE="found.log"
-        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual" || true > $LOGFILE
+        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual" > $LOGFILE || true 
         ERRORS=$(cat $LOGFILE | wc -l)
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
