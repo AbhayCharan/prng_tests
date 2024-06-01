@@ -25,7 +25,10 @@ displayGeneratorOptions()
 	printf("    [8] Micali-Schnorr             [9] G Using SHA-1\n");
 	printf("    [10] AKalashnikova G Using Fibonacci LFSR\n");
 	printf("    [11] AKalashnikova G Using Galois Right LFSR\n");
-	printf("    [12] AKalashnikova G Using Galois Left LFSR\n\n");
+	printf("    [12] AKalashnikova G Using Galois Left LFSR\n");
+	printf("    [13] AKalashnikova G Using ChaCha20\n");
+	printf("    [14] AKalashnikova G Using XChaCha20\n");
+	printf("    [15] AKalashnikova G Using ChaCha_20\n\n");
 	printf("   Enter Choice: ");
 	scanf("%d", &option);
 	printf("\n\n");
@@ -89,6 +92,12 @@ generatorOptions(char** streamFile)
 			case 11:  *streamFile = "AKalashnikova-G-Using-Galois-Right-LFSR";
 				break;
 			case 12:  *streamFile = "AKalashnikova-G-Using-Galois-Left-LFSR";
+				break;
+			case 13:  *streamFile = "AKalashnikova-G-Using-ChaCha20";
+				break;
+			case 14:  *streamFile = "AKalashnikova-G-Using-XChaCha20";
+				break;
+			case 15:  *streamFile = "AKalashnikova-G-Using-ChaCha_20";
 				break;
 			default:
 				printf("Error:  Out of range - Try again!\n");
