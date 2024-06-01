@@ -1,5 +1,5 @@
 name: "TestU01"
-run-name: "TestU01 ${{inputs.battery_name}} battery run with ${{inputs.generator_name}}"
+run-name: "TestU01 ${{inputs.battery_name}} with ${{inputs.generator_name}}"
 
 on:
   workflow_dispatch:

@@ -1,5 +1,5 @@
 name: "PractRand"
-run-name: "PractRand ${{inputs.battery_name}} MAX run with ${{inputs.generator_name}}"
+run-name: "PractRand ${{inputs.battery_name}} MAX with ${{inputs.generator_name}}"
 
 on:
   workflow_dispatch:

@@ -33,7 +33,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Run PractRand ${{inputs.generator_name}} with ${{inputs.battery_name}} MAX
+    - name: Run PractRand ${{inputs.battery_name}} MAX with ${{inputs.generator_name}}
       run: |
         sudo apt install g++-12
         git clone https://github.com/planet36/PractRand.git # Fork of PractRand-pre0.95 with many warnings fixed

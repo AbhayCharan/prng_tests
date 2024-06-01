@@ -19,6 +19,10 @@ on:
         description: 'Directory name'
         required: true
         type: string
+      generator_name:
+        description: 'Pseudo Random Number Generator'
+        required: true
+        type: string
 
 env:
   LOG_FILE: "stat.log"
@@ -27,61 +31,25 @@ jobs:
   main:
     name: Test the PRNG
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./NIST
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build PractRand Statistical Test Suite
-      run: |
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        uname -a >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
-        #git clone https://github.com/planet36/PractRand.git # Fork of PractRand-pre0.95 with many warnings fixed
-        #cd PractRand
-        #CXXFLAGS="-std=c++2a -O3" ./configure
-        #make
-        #./RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
-        pwd
-
-        #git clone https://github.com/tylov-fork/PractRand.git # with GNUmakefile to build/Linux/
-        #cd PractRand
-        #make
-        #build/Linux/bin/RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
-
-        git clone https://github.com/MartyMacGyver/PractRand.git
-        cd PractRand
-        g++ -c src/*.cpp src/RNGs/*.cpp src/RNGs/other/*.cpp -O3 -Iinclude -pthread -std=gnu++11
-        ar rcs libPractRand.a *.o
-        g++ -o RNG_test tools/RNG_test.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
-        g++ -o RNG_benchmark tools/RNG_benchmark.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
-        g++ -o RNG_output tools/RNG_output.cpp libPractRand.a -O3 -Iinclude -pthread -std=gnu++11
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        ./RNG_test chacha -tlmax 1G  >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-
-    - name: Build TestU01 Statistical Test Suite
-      working-directory: ./TestU01
-      run: |
-        sudo apt install testu01-bin testu01-data libtestu01-0-dev
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        make  >> $GITHUB_STEP_SUMMARY || true
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
-        echo "action_state=yellow" >> "$GITHUB_ENV"
-        pwd
-
     - name: Build NIST Statistical Test Suite
-      working-directory: ./NIST
       run: |
+        echo "-------------------------------------"
+        echo ${{ github.events.inputs.environment }}
+        echo "-------------------------------------"
+        echo "action_state=yellow" >> "$GITHUB_ENV"
         printf '%s\n' "$action_state" # This will output 'yellow'
         make rebuild
         echo "=================================================================" >> $GITHUB_STEP_SUMMARY
 
-    - name: Run NIST Statistical Test Suite with ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}}"
-      working-directory: ./NIST
+    - name: Run NIST ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}} with ${{inputs.generator_name}}
       run: |
         pwd
         ls -la
@@ -91,10 +59,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'Results_${{inputs.test_dir}}_${{inputs.stream_length}}_${{inputs.stream_number}}'
-        path: './experiments/${{inputs.test_dir}}/'
+        path: './NIST/experiments/${{inputs.test_dir}}/'
 
     - name: Show error status
-      working-directory: ./NIST
       run: |
         LOGFILE="found.log"
         DATAFILE="./experiments/${{inputs.test_dir}}/finalAnalysisReport.txt"
@@ -104,7 +71,6 @@ jobs:
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Configuration
-      working-directory: ./NIST
       run: |
         echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
         cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
@@ -114,7 +80,6 @@ jobs:
         echo "__Stream length__ (length of one Sequence) : ${{inputs.stream_length}}" >> $GITHUB_STEP_SUMMARY
 
     - name: Show Stats and Analysis Report
-      working-directory: ./NIST
       run: |
         echo "**Run time**, seconds :" >> $GITHUB_STEP_SUMMARY
         cat ${{env.LOG_FILE}} >> $GITHUB_STEP_SUMMARY

@@ -35,7 +35,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Run TestU01 ${{inputs.generator_name}} with ${{inputs.battery_name}}"
+    - name: Run TestU01 ${{inputs.battery_name}} with ${{inputs.generator_name}}
       run: |
         sudo apt install testu01-bin testu01-data libtestu01-0-dev
         #sed -i '/PROGRAMS = ${{inputs.generator_name}}/s/^/#/g' Makefile    # to comment out
