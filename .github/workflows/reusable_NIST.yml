@@ -41,18 +41,12 @@ jobs:
 
     - name: Build NIST Statistical Test Suite
       run: |
-        echo "-------------------------------------"
-        echo ${{ github.events.inputs.environment }}
-        echo "-------------------------------------"
         echo "action_state=yellow" >> "$GITHUB_ENV"
         printf '%s\n' "$action_state" # This will output 'yellow'
         make rebuild
-        echo "=================================================================" >> $GITHUB_STEP_SUMMARY
 
     - name: Run NIST ${{inputs.stream_number}} bitstreams of length ${{inputs.stream_length}} with ${{inputs.generator_name}}
       run: |
-        pwd
-        ls -la
         /bin/echo "${{inputs.test_num}} 1 0 ${{inputs.stream_number}}" | /usr/bin/time -o ${{env.LOG_FILE}} -p ./assess ${{inputs.stream_length}} || true
 
     - name: Upload results to Job artifact

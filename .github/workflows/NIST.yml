@@ -27,11 +27,11 @@ on:
         required: true
         default: 'ChaCha20'
         type: choice
-        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
+        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR', 'FibonacciLFSR']
 
 env:
-  TEST_NUM: "11"
-  DIR_NAME: "AKalashnikovaGaloisRightLFSR"
+  TEST_NUM: "10"
+  DIR_NAME: "AKalashnikovaFibonacciLFSR"
 
 jobs:
   prepare:
@@ -45,28 +45,27 @@ jobs:
       run: | 
         echo ${{ github.events.inputs.environment }}
         case ${{inputs.generator_name}} in
-          GaloisLeftLFSR)
-            echo -n "GaloisLeftLFSR"
-            echo "TEST_NUM=12" >> "$GITHUB_ENV"
-            echo "DIR_NAME=AKalashnikovaGaloisLeftLFSR" >> "$GITHUB_ENV"
+          FibonacciLFSR)
+            echo "TEST_NUM=10" >> "$GITHUB_ENV"
+            echo "DIR_NAME=AKalashnikovaFibonacciLFSR" >> "$GITHUB_ENV"
             ;;
           GaloisRightLFSR)
-            echo -n "GaloisRightLFSR"
             echo "TEST_NUM=11" >> "$GITHUB_ENV"
             echo "DIR_NAME=AKalashnikovaGaloisRightLFSR" >> "$GITHUB_ENV"
             ;;
+          GaloisLeftLFSR)
+            echo "TEST_NUM=12" >> "$GITHUB_ENV"
+            echo "DIR_NAME=AKalashnikovaGaloisLeftLFSR" >> "$GITHUB_ENV"
+            ;;
           ChaCha20)
-            echo -n "ChaCha20"
             echo "TEST_NUM=13" >> "$GITHUB_ENV"
             echo "DIR_NAME=AKalashnikovaChaCha20" >> "$GITHUB_ENV"
             ;;
           XChaCha20)
-            echo -n "XChaCha20"
             echo "TEST_NUM=14" >> "$GITHUB_ENV"
             echo "DIR_NAME=AKalashnikovaXChaCha20" >> "$GITHUB_ENV"
             ;;
           ChaCha_20)
-            echo -n "ChaCha_20"
             echo "TEST_NUM=15" >> "$GITHUB_ENV"
             echo "DIR_NAME=AKalashnikovaChaCha_20" >> "$GITHUB_ENV"
             ;;
@@ -79,8 +78,6 @@ jobs:
             echo -n "unknown"
             ;;
         esac
-        echo "-------------------------------------"
-        echo ${{ github.events.inputs.environment }}
 
 
   main:
