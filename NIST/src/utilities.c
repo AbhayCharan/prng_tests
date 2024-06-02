@@ -470,6 +470,15 @@ invokeTestSuite(int option, char *streamFile)
 		case 12:
             AKalashnikovaGaloisLeftLFSR();
 			break;
+		case 13:
+            AKalashnikovaChaCha20();
+			break;
+		case 14:
+            AKalashnikovaXChaCha20();
+			break;
+		case 15:
+            AKalashnikovaChaCha_20();
+			break;
 			
 		/* INTRODUCE NEW PSEUDO RANDOM NUMBER GENERATORS HERE */
 			
