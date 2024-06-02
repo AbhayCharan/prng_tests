@@ -61,10 +61,15 @@ jobs:
           if [ -s ${LOGFILE} ]; then echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
 
           cat ./AKalashnikova${{inputs.generator_name}}.res | grep -E "9 tests, 237 assertions|Finished in|Selftest with RFC 7539 test vectors" > $LOGFILE || true
+          echo "*******************"
+          cat $LOGFILE
+          echo "*******************"
           #  9 tests, 237 assertions, 0 failures
           #  Finished in 0.00003256 seconds (real) 0.00003197 seconds (proc)
           #  Selftest with RFC 7539 test vectors: PASSED.
           RES=$(cat ${LOGFILE} | grep PASSED || true)
+          echo "*******************"
+          echo "RES = ${RES}"
           if [ -n ${RES} ]; then echo "__Selftest status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Selftest status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
         fi
         pwd
