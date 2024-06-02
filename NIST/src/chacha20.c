@@ -414,7 +414,6 @@ uint32_t chacha20_random_ (struct chacha20_context *ctx)
             printf("Selftest with RFC 7539 test vectors: PASSED.\n");
 
         chacha20_init_context(ctx, key, nonce, 1);
-        uint64_t *p64 = (uint64_t*) &key[0];
         printf("Status initialization: OK.\n");
         chacha20_block_next(ctx);
         ctx->position = 64;
