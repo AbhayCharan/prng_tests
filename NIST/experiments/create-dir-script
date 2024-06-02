@@ -1,6 +1,6 @@
 # Create Directory Structure
 
-for dname in AlgorithmTesting BBS CCG G-SHA1 LCG MODEXP MS QCG1 QCG2 XOR AKalashnikovaFibonacciLFSR AKalashnikovaGaloisRightLFSR AKalashnikovaGaloisLeftLFSR AKalashnikovaChaCha20 AKalashnikovaXChaCha20 AKalashnikovaChaCha_20 ; do 
+for dname in AlgorithmTesting BBS CCG G-SHA1 LCG MODEXP MS QCG1 QCG2 XOR AKalashnikovaGaloisRightLFSR AKalashnikovaGaloisLeftLFSR AKalashnikovaChaCha20 ; do 
 	mkdir $dname/Frequency
 	mkdir $dname/BlockFrequency
 	mkdir $dname/Runs

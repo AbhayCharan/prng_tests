@@ -27,11 +27,11 @@ on:
         required: true
         default: 'ChaCha20'
         type: choice
-        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR', 'FibonacciLFSR']
+        options: ['ChaCha20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
 
 env:
   TEST_NUM: "10"
-  DIR_NAME: "AKalashnikovaFibonacciLFSR"
+  DIR_NAME: "AKalashnikovaChaCha20"
 
 jobs:
   prepare:
@@ -45,9 +45,9 @@ jobs:
       run: | 
         echo ${{ github.events.inputs.environment }}
         case ${{inputs.generator_name}} in
-          FibonacciLFSR)
+          ChaCha20)
             echo "TEST_NUM=10" >> "$GITHUB_ENV"
-            echo "DIR_NAME=AKalashnikovaFibonacciLFSR" >> "$GITHUB_ENV"
+            echo "DIR_NAME=AKalashnikovaChaCha20" >> "$GITHUB_ENV"
             ;;
           GaloisRightLFSR)
             echo "TEST_NUM=11" >> "$GITHUB_ENV"
@@ -56,18 +56,6 @@ jobs:
           GaloisLeftLFSR)
             echo "TEST_NUM=12" >> "$GITHUB_ENV"
             echo "DIR_NAME=AKalashnikovaGaloisLeftLFSR" >> "$GITHUB_ENV"
-            ;;
-          ChaCha20)
-            echo "TEST_NUM=13" >> "$GITHUB_ENV"
-            echo "DIR_NAME=AKalashnikovaChaCha20" >> "$GITHUB_ENV"
-            ;;
-          XChaCha20)
-            echo "TEST_NUM=14" >> "$GITHUB_ENV"
-            echo "DIR_NAME=AKalashnikovaXChaCha20" >> "$GITHUB_ENV"
-            ;;
-          ChaCha_20)
-            echo "TEST_NUM=15" >> "$GITHUB_ENV"
-            echo "DIR_NAME=AKalashnikovaChaCha_20" >> "$GITHUB_ENV"
             ;;
 
           Italy | "San Marino" | Switzerland | "Vatican City")

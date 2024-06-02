@@ -13,7 +13,7 @@ FILE		*freqfp;				// FILE OUTPUT STREAM
 FILE		*summary;				// FILE OUTPUT STREAM
 int			testVector[NUMOFTESTS+1];
 
-char	generatorDir[NUMOFGENERATORS][32] = { "AlgorithmTesting", "LCG", "QCG1", "QCG2","CCG", "XOR", "MODEXP", "BBS", "MS", "G-SHA1", "AKalashnikovaFibonacciLFSR", "AKalashnikovaGaloisRightLFSR", "AKalashnikovaGaloisLeftLFSR", "AKalashnikovaChaCha20", "AKalashnikovaXChaCha20", "AKalashnikovaChaCha_20" };
+char	generatorDir[NUMOFGENERATORS][32] = { "AlgorithmTesting", "LCG", "QCG1", "QCG2","CCG", "XOR", "MODEXP", "BBS", "MS", "G-SHA1", "AKalashnikovaChaCha20" , "AKalashnikovaGaloisRightLFSR", "AKalashnikovaGaloisLeftLFSR" };
 				
 char	testNames[NUMOFTESTS+1][32] = { " ", "Frequency", "BlockFrequency", "CumulativeSums", "Runs", "LongestRun", "Rank",
 			"FFT", "NonOverlappingTemplate", "OverlappingTemplate", "Universal", "ApproximateEntropy", "RandomExcursions",

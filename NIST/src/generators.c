@@ -477,65 +477,6 @@ ULONG LFSR_GAMMA =   0x0f6b75ab2bc471c7; // initialize LFSR register by Prime nu
                                          // 0x0aaaaaaaaaaaaaab
 
 void
-AKalashnikovaFibonacciLFSR()
-{
-    int j, k, num_0s, num_1s, bitsRead, done;
-    BYTE *pB;
-
-    if ( (epsilon = (BitSequence *)calloc(tp.n, sizeof(BitSequence))) == NULL ) {
-        printf("Insufficient memory available.\n");
-        exit(1);
-    }
-
-    /*
-    char buff[64] = "prettyprintBstr title > ";
-       BYTE tmp[8];
-    ahtopb("416e617374617369", tmp, 8);
-    prettyprintBstr(buff, tmp, 8); // print N bytes in HEX
-    */
-    printf("..................................................\n");
-
-    for ( k=0; k<tp.numOfBitStreams; k++ ) {
-        num_0s = 0;
-        num_1s = 0;
-        bitsRead = 0;
-        done = 0;
-        do {
-            //printf("LFSR_GAMMA hex = 0x%lx\n", LFSR_GAMMA);
-            // Get MSB:
-//            unsigned char h = (uint8_t)((LFSR_GAMMA>>(64-8))&0xFF); // LFSR_GAMMA & 0xFF00000000000000u
-            //unsigned char h = (unsigned char)(((uint8_t)((LFSR_GAMMA>>(64-8))&0xFF))^1); // LFSR_GAMMA & 0xFF00000000000000u
-//            done = convertToBits(&h, 8, tp.n, &num_0s, &num_1s, &bitsRead);
-            // Fails: 'igamc: UNDERFLOW' + LinearComplexity, ~5m
-
-            // Get LSB:
-               pB = (BYTE *)&LFSR_GAMMA;  // LFSR_GAMMA & 0x00000000000000FFu
-            *pB ^= 1;
-            //printf("         h hex = 0x%0x\n", *pB);
-            done = convertToBits(pB, 8, tp.n, &num_0s, &num_1s, &bitsRead);
-            // Fails: 'igamc: UNDERFLOW' + 3 fails, ~5m
-            // 7m 48s
-
-            for ( j=0; j<8; j++ )
-            {
-                // The Fibonacci polynomial (or feedback polynomial): F(x) = x^64 + x^63 + x^61 + x^60 + 1
-                // Tap sequence is  [64, 4, 3, 1, 0], counterpart sequence is [64, 63, 61, 60, 0].
-                //                                                    /feedback bits\
-                // Long Long representation of bits here is inverted: 1 2 3 4 5 6 7 8 ............... 60 61 62 63 64
-                ULONG feedback_bit = ((LFSR_GAMMA >> 0) ^ (LFSR_GAMMA >> 1) ^ (LFSR_GAMMA >> 3) ^ (LFSR_GAMMA >> 4)) & 1u;
-                // or ULONG feedback_bit = _popcnt64(LFSR_GAMMA & 0x001Bu);
-                LFSR_GAMMA = (LFSR_GAMMA >> 1) | (feedback_bit << 63);
-                // or LFSR_GAMMA = _lrotr(((feedback_bit ^ LFSR_GAMMA) & 1u) ^ LFSR_GAMMA, 1);
-            }
-        } while ( !done );
-        fprintf(freqfp, "\t\tBITSREAD = %d 0s = %d 1s = %d\n", bitsRead, num_0s, num_1s); fflush(freqfp);
-        nist_test_suite();
-    }
-
-    free(epsilon);
-}
-
-void
 AKalashnikovaGaloisRightLFSR()
 {
     int j, k, num_0s, num_1s, bitsRead, done;
@@ -685,60 +626,19 @@ AKalashnikovaChaCha20()
         cc20ctx.position = 64;
     }
 
-    uint64_t *p64 = (uint64_t*) &key[0];
-    printf("key0 = 0x%lx\n", *p64);
-    printf("key1 = 0x%lx\n", *(p64+1));
-    printf("key2 = 0x%lx\n", *(p64+2));
-    printf("key3 = 0x%lx\n", *(p64+3));
-    
-    printf("LFSR_GAMMA = %lu\n", LFSR_GAMMA);
-    printf("LFSR_GAMMA hex = 0x%lx\n", LFSR_GAMMA);
-    printf("..................................................\n");
-    printf("   5 bin = "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY(5));            // 00000101
-    printf("   5 hex = 0x%08x\n", 5);                                            // 0x00000005
-    printf("  -5 bin = "BYTE_TO_BINARY_PATTERN"\n", BYTE_TO_BINARY((int)-5));    // 11111011
-    printf("  -5 hex = 0x%08x\n", (int)-5);                                        // 0xfffffffb
-    printf("..................................................\n");
-
     for ( k=0; k<tp.numOfBitStreams; k++ ) {
         num_0s = 0;
         num_1s = 0;
         bitsRead = 0;
         done = 0;
         do {
-/*            
-             printf("  LFSR_GAMMA hex = 0x%lx\n", LFSR_GAMMA);                  // 0x416e617374617369
-               BYTE* tmp = (unsigned char *)&LFSR_GAMMA;
-            prettyprintBstr('\0', tmp, 8); // print N bytes in HEX as in Memory: 69736174 73616E41
-            printf("    ?0 = 0x%0x\n", *(unsigned char *)&LFSR_GAMMA);
-            printf("    ?1 = 0x%0x\n", *((unsigned char *)(&LFSR_GAMMA) + 1));
-            printf("    ?2 = 0x%0x\n", *((unsigned char *)(&LFSR_GAMMA) + 2));
-            printf("    ?3 = 0x%0x\n", *((unsigned char *)(&LFSR_GAMMA) + 3));
-            printf("    ?4 = 0x%0x\n", *((unsigned char *)(&LFSR_GAMMA) + 4));
-            printf("..................................................\n");
-*/
-
             pB = (BYTE *) &cc20ctx.keystream32[0];  // 512 bits
-            //*pB ^= 1;
-            //printf("         h hex = 0x%0x\n", *pB);
             done = convertToBits(pB, 512, tp.n, &num_0s, &num_1s, &bitsRead);
-            // Fails: none, 7m50s
-
             chacha20_block_next(&cc20ctx);
-
         } while ( !done );
         fprintf(freqfp, "\t\tBITSREAD = %d 0s = %d 1s = %d\n", bitsRead, num_0s, num_1s); fflush(freqfp);
         nist_test_suite();
     }
 
     free(epsilon);
-}
-
-void
-AKalashnikovaXChaCha20()
-{
-}
-void
-AKalashnikovaChaCha_20()
-{
 }

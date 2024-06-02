@@ -12,12 +12,9 @@ void	modExp();
 void	bbs();
 void	micali_schnorr();
 void	SHA1();
-void	AKalashnikovaFibonacciLFSR();
+void	AKalashnikovaChaCha20();
 void	AKalashnikovaGaloisRightLFSR();
 void	AKalashnikovaGaloisLeftLFSR();
-void	AKalashnikovaChaCha20();
-void	AKalashnikovaXChaCha20();
-void	AKalashnikovaChaCha_20();
 
 /* The circular shifts. */
 #define CS1(x) ((((ULONG)x)<<1)|(((ULONG)x)>>31))

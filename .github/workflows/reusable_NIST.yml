@@ -67,11 +67,8 @@ jobs:
         if [ ${{inputs.generator_name}} = 'ChaCha20' ]; then
           cat ./experiments/${{inputs.test_dir}}/freq.txt | grep -E "Selftest with RFC 7539 test vectors" > $LOGFILE || true
           echo "*******************"
-          cat $LOGFILE
+          cat $LOGFILE #  Selftest with RFC 7539 test vectors: PASSED.
           echo "*******************"
-          #  9 tests, 237 assertions, 0 failures
-          #  Finished in 0.00003256 seconds (real) 0.00003197 seconds (proc)
-          #  Selftest with RFC 7539 test vectors: PASSED.
           SELF_RESULT=$(cat ${LOGFILE} | grep PASSED || true)
           if [ -n "${SELF_RESULT}" ]; then echo "__Selftest status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Selftest status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
         fi
@@ -80,8 +77,10 @@ jobs:
       run: |
         echo "__Significance Level α__ :" >> $GITHUB_STEP_SUMMARY
         cat include/defs.h |grep ALPHA >> $GITHUB_STEP_SUMMARY # define ALPHA	0.01	SIGNIFICANCE LEVEL
-        echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
-        cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
+        if [ ${{inputs.generator_name}} != 'ChaCha20' ]; then
+          echo "__Initial value of LFSR register__ :" >> $GITHUB_STEP_SUMMARY
+          cat src/generators.c |grep "^ULONG LFSR_GAMMA" >> $GITHUB_STEP_SUMMARY # ULONG LFSR_GAMMA = 0xec822a619d6ed5d9; // initialize LFSR register
+        fi
         echo "__Bitstreams__ (number of Sequences) : ${{inputs.stream_number}}" >> $GITHUB_STEP_SUMMARY
         echo "__Stream length__ (length of one Sequence) : ${{inputs.stream_length}}" >> $GITHUB_STEP_SUMMARY
 
