@@ -671,11 +671,11 @@ AKalashnikovaChaCha20()
         MU_REPORT();
         if(minunit_fail > 0)
         {
-            printf("Selftest with RFC 7539 test vectors: FAIL. Exit.\n");
+            fprintf(freqfp, "\n\tSelftest with RFC 7539 test vectors: FAIL. Exit.\n"); fflush(freqfp);
             exit(EXIT_FAILURE);
         }
         else
-            printf("Selftest with RFC 7539 test vectors: PASSED.\n");
+            fprintf(freqfp, "\n\tSelftest with RFC 7539 test vectors: PASSED.\n"); fflush(freqfp);
 
         chacha20_init_context(&cc20ctx, key, nonce, 1);
         uint64_t *p64 = (uint64_t*) &key[0];

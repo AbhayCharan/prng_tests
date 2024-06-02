@@ -65,7 +65,7 @@ jobs:
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
         if [ ${{inputs.generator_name} = 'ChaCha20' ]; then
-          cat $DATAFILE | grep -E "9 tests, 237 assertions|Finished in|Selftest with RFC 7539 test vectors" > $LOGFILE || true
+          cat ./experiments/${{inputs.test_dir}}/freq.txt | grep -E "Selftest with RFC 7539 test vectors" > $LOGFILE || true
           echo "*******************"
           cat $LOGFILE
           echo "*******************"
