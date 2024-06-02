@@ -27,8 +27,6 @@ SHELL = /bin/bash
 default: all
 
 #PROGRAMS = AKalashnikovaChaCha20
-#PROGRAMS = AKalashnikovaXChaCha20
-#PROGRAMS = AKalashnikovaChaCha_20
 #PROGRAMS = AKalashnikovaGaloisLeftLFSR
 #PROGRAMS = AKalashnikovaGaloisRightLFSR
 
@@ -47,8 +45,6 @@ ex7: ex7.c mrg32k3a.c xorshift.c
 AKalashnikovaGaloisLeftLFSR: AKalashnikovaGaloisLeftLFSR.c galoisLeftLFSR.c
 AKalashnikovaGaloisRightLFSR: AKalashnikovaGaloisRightLFSR.c galoisRightLFSR.c
 AKalashnikovaChaCha20: AKalashnikovaChaCha20.c chacha20.c
-AKalashnikovaXChaCha20: AKalashnikovaXChaCha20.c xchacha20.c
-AKalashnikovaChaCha_20: AKalashnikovaChaCha_20.c chacha20_.c
 
 all: build check
 

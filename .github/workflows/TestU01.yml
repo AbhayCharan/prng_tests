@@ -17,7 +17,7 @@ on:
         required: true
         default: 'ChaCha20'
         type: choice
-        options: ['ChaCha20', 'XChaCha20', 'ChaCha_20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
+        options: ['ChaCha20', 'GaloisLeftLFSR', 'GaloisRightLFSR']
 
 env:
   TEST_NUM: "10"
