@@ -40,7 +40,6 @@ jobs:
         cd PractRand
         CXX=g++-12 CXXFLAGS="-std=c++2a -O3" ./configure
         make
-        ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
 
         #git clone https://github.com/tylov-fork/PractRand.git # with GNUmakefile to build/Linux/
         #cd PractRand
@@ -58,6 +57,14 @@ jobs:
         #./RNG_test ${{inputs.generator_name}} -tlmax 1G  >> $GITHUB_STEP_SUMMARY
         #echo '```' >> $GITHUB_STEP_SUMMARY
 
+        if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
+          gcc -O3 -Wall -I.. ../AKalashnikovaChaCha20.c -o ./AKalashnikovaChaCha20
+          ./AKalashnikovaChaCha20 | ./RNG_test stdin64 -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
+          #./AKalashnikovaChaCha20 | ./RNG_test stdin  -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
+        else
+          ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
+        fi
+
         echo "action_state=yellow" >> "$GITHUB_ENV"
         printf '%s\n' "$action_state" # This will output 'yellow'
 
@@ -70,7 +77,7 @@ jobs:
     - name: Show error status
       run: |
         LOGFILE="found.log"
-        cat ./PractRand/${{env.LOG_FILE}} | grep "unusual" > $LOGFILE || true 
+        cat ./PractRand/${{env.LOG_FILE}} | grep "FAIL" > $LOGFILE || true 
         ERRORS=$(cat $LOGFILE | wc -l)
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 

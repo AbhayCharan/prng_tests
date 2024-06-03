@@ -17,7 +17,7 @@ on:
         required: true
         default: 'chacha'
         type: choice
-        options: ['arbee', 'chacha', 'efiix', 'hc256', 'isaac', 'jsf', 'mt19937', 'rarns', 'salsa', 'sfc', 'sha2_based_pool', 'trivium', 'xsm' ]
+        options: ['AKalashnikovaChaCha20', 'chacha', 'arbee', 'efiix', 'hc256', 'isaac', 'jsf', 'mt19937', 'rarns', 'salsa', 'sfc', 'sha2_based_pool', 'trivium', 'xsm' ]
 
 env:
   TEST_NUM: "10"
