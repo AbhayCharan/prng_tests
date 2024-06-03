@@ -15,7 +15,7 @@ on:
         description: >
           Pseudo Random Number Generator
         required: true
-        default: 'chacha'
+        default: 'AKalashnikovaChaCha20'
         type: choice
         options: ['AKalashnikovaChaCha20', 'chacha', 'arbee', 'efiix', 'hc256', 'isaac', 'jsf', 'mt19937', 'rarns', 'salsa', 'sfc', 'sha2_based_pool', 'trivium', 'xsm' ]
 

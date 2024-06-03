@@ -387,7 +387,7 @@ uint8_t nonce[] = {
 uint8_t counter[8] = {0x1};
 
 extern int minunit_fail;
-int chacha20_selftests (struct chacha20_context *ctx)
+int chacha20_run_selftests (struct chacha20_context *ctx)
 {
     MU_RUN_TEST(u32t8le_test);
     MU_RUN_TEST(u8t32le_test);
