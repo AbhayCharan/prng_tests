@@ -57,17 +57,16 @@ jobs:
         #./RNG_test ${{inputs.generator_name}} -tlmax 1G  >> $GITHUB_STEP_SUMMARY
         #echo '```' >> $GITHUB_STEP_SUMMARY
 
+        #echo "action_state=yellow" >> "$GITHUB_ENV"
+        #printf '%s\n' "$action_state" # This will output 'yellow'
+
         if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
-          gcc -O3 -Wall -I.. ../AKalashnikovaChaCha20.c -o ./AKalashnikovaChaCha20    | tee --output-error=exit ${{env.LOG_FILE}}
-          ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}}
-          #./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}} | tee --output-error=exit ${{env.LOG_FILE}}
+          gcc -O3 -Wall -I.. ../AKalashnikovaChaCha20.c -o ./AKalashnikovaChaCha20 
+          ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
           #./AKalashnikovaChaCha20 | ./RNG_test stdin -tlfail -p 0.001 | tee ${{env.LOG_FILE}}
         else
           ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
         fi
-
-        echo "action_state=yellow" >> "$GITHUB_ENV"
-        printf '%s\n' "$action_state" # This will output 'yellow'
 
     - name: Upload results to Job artifact
       if: ${{ always() }}
