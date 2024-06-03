@@ -59,8 +59,7 @@ jobs:
 
         if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
           gcc -O3 -Wall -I.. ../AKalashnikovaChaCha20.c -o ./AKalashnikovaChaCha20
-          #./AKalashnikovaChaCha20 | ./RNG_test stdin64 -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
-          ./AKalashnikovaChaCha20 | ./RNG_test stdin  -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
+          ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
         else
           ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
         fi
@@ -69,12 +68,14 @@ jobs:
         printf '%s\n' "$action_state" # This will output 'yellow'
 
     - name: Upload results to Job artifact
+      if: ${{ always() }}
       uses: actions/upload-artifact@v4
       with:
         name: 'Full log file archive'
         path: './PractRand/${{env.LOG_FILE}}'
 
     - name: Show error status
+      if: ${{ always() }}
       run: |
         LOGFILE="found.log"
         cat ./PractRand/${{env.LOG_FILE}} | grep "FAIL" > $LOGFILE || true 
@@ -82,6 +83,7 @@ jobs:
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
 
     - name: Show Stats and Analysis Report
+      if: ${{ always() }}
       working-directory: ./PractRand
       run: |
         echo "**System** :" >> $GITHUB_STEP_SUMMARY
