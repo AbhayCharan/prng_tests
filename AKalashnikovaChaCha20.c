@@ -114,7 +114,7 @@ static void chacha20_block_next(struct chacha20_context *ctx) {
 
     uint32_t *counter = ctx->state + 12;
     counter[0]++;
-    if (0 == counter[0]) 
+    if (0 == counter[0])
     {
         // from https://github.com/Ginurx/chacha20-c/blob/master/chacha20.c
         // wrap around occured, increment higher 32 bits of counter
@@ -356,9 +356,9 @@ MU_TEST(chacha20_xor_test) {
 void chacha20_xor(struct chacha20_context *ctx, uint8_t *bytes, size_t n_bytes)
 {
     uint8_t *keystream8 = (uint8_t*)ctx->keystream32;
-    for (size_t i = 0; i < n_bytes; i++) 
+    for (size_t i = 0; i < n_bytes; i++)
     {
-        if (ctx->position >= 64) 
+        if (ctx->position >= 64)
         {
             chacha20_block_next(ctx);
             ctx->position = 0;
@@ -372,7 +372,7 @@ void chacha20_xor(struct chacha20_context *ctx, uint8_t *bytes, size_t n_bytes)
 /*  0x0f6b75ab2bc471c7
     0x0c9dbd5d80e68ba3
     0x017fffffffffffff
-    0x1fffffffffffffff    
+    0x1fffffffffffffff
 */
 uint8_t key[] = {
         0x0f, 0x6b, 0x75, 0xab, 0x2b, 0xc4, 0x71, 0xc7,
@@ -416,7 +416,7 @@ int32_t main (void)
     }
 
     chacha20_init_context(&cc20ctx, key, nonce, 1);
-    freopen(NULL, "wb", stdout);  // Only necessary on Windows, but harmless. 
+    //freopen(NULL, "wb", stdout);  // Only necessary on Windows, but harmless.
 
     while (1) {
         chacha20_block_next (&cc20ctx);
