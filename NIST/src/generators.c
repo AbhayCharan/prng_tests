@@ -599,26 +599,13 @@ AKalashnikovaChaCha20()
 
     if (cc20ctx.position == -1)
     {
-        // Run selftests and exit if it fails
-        MU_RUN_TEST(u32t8le_test);
-        MU_RUN_TEST(u8t32le_test);
-        MU_RUN_TEST(rotl32_test);
-        MU_RUN_TEST(chacha20_quarterround_test_1);
-        MU_RUN_TEST(chacha20_quarterround_test_2);
-        MU_RUN_TEST(chacha20_serialize_test);
-        MU_RUN_TEST(chacha20_block_test);
-        MU_RUN_TEST(chacha20_init_state_test);
-        MU_RUN_TEST(chacha20_xor_test);
-        MU_REPORT();
-        if(minunit_fail > 0)
+        // At first run selftest with RFC 7539 test vectors
+        if (chacha20_run_selftests(&cc20ctx) > 0)
         {
-            fprintf(freqfp, "Selftest with RFC 7539 test vectors: FAIL. Exit.\n\n"); fflush(freqfp);
+            printf("Selftest with RFC 7539 test vectors: FAIL. Exit.\n");
             exit(EXIT_FAILURE);
         }
-        else
-        {
-            fprintf(freqfp, "Selftest with RFC 7539 test vectors: PASSED.\n\n"); fflush(freqfp);
-        }
+        printf("Selftest with RFC 7539 test vectors: PASSED.\n");
 
         chacha20_init_context(&cc20ctx, key, nonce, 1);
         printf("Status initialization: OK.\n");
