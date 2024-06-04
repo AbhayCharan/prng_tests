@@ -33,7 +33,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Run PractRand ${{inputs.battery_name}} MAX with ${{inputs.generator_name}}
+    - name: Run PractRand ${{inputs.battery_name}} with ${{inputs.generator_name}}
       run: |
         sudo apt install g++-12
         git clone https://github.com/planet36/PractRand.git # Fork of PractRand-pre0.95 with many warnings fixed
@@ -62,10 +62,17 @@ jobs:
 
         if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
           gcc -O3 -Wall -I.. ../AKalashnikovaChaCha20.c -o ./AKalashnikovaChaCha20 
-          #./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
-          ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlfail -p 0.001 | tee ${{env.LOG_FILE}}
+          if [ ${{inputs.battery_name}} = 'NonStop' ]; then
+            ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlfail -p 0.001 | tee ${{env.LOG_FILE}}
+          else
+            ./AKalashnikovaChaCha20 | ./RNG_test stdin -tlmax ${{inputs.battery_name}} | tee ${{env.LOG_FILE}}
+          fi
         else
-          ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
+          if [ ${{inputs.battery_name}} = 'NonStop' ]; then
+            ./RNG_test ${{inputs.generator_name}} -tlfail -p 0.001 -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
+          else
+            ./RNG_test ${{inputs.generator_name}} -tlmax ${{inputs.battery_name}} -seed 0xf6b75ab2bc471c7 | tee ${{env.LOG_FILE}}
+          fi
         fi
 
     - name: Upload results to Job artifact

@@ -1,16 +1,18 @@
 name: "PractRand"
-run-name: "PractRand ${{inputs.battery_name}} MAX with ${{inputs.generator_name}}"
+run-name: "PractRand ${{inputs.battery_name}} with ${{inputs.generator_name}}"
 
 on:
   workflow_dispatch:
     inputs:
       battery_name:
         description: >
-          Predefined batteries of statistical tests
+          Predefined batteries of statistical tests.
+          NOTE: 'NonStop' means 'run until you Cancel the job manually'.
+            It also sets 'p-value' to '0.001' !
         required: true
         default: '1G'
         type: choice
-        options: ['1G', '10G', '100G', '1T', '10T', '100T']
+        options: ['NonStop', '1G', '10G', '100G', '1T', '10T', '100T']
       generator_name:
         description: >
           Pseudo Random Number Generator
@@ -37,7 +39,6 @@ jobs:
         if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
           ${{inputs.battery_name}} = 'NonStop'
         fi
-
 
   main:
     name: Run test with the parameters
