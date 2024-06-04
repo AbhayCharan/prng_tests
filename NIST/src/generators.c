@@ -589,7 +589,7 @@ AKalashnikovaGaloisLeftLFSR()
 void
 AKalashnikovaChaCha20()
 {
-    int j, k, num_0s, num_1s, bitsRead, done;
+    int k, num_0s, num_1s, bitsRead, done;
     BYTE *pB;
 
     if ( (epsilon = (BitSequence *)calloc(tp.n, sizeof(BitSequence))) == NULL ) {
@@ -603,9 +603,11 @@ AKalashnikovaChaCha20()
         if (chacha20_run_selftests(&cc20ctx) > 0)
         {
             printf("Selftest with RFC 7539 test vectors: FAIL. Exit.\n");
+            fprintf(freqfp, "Selftest with RFC 7539 test vectors: FAIL. Exit.\n\n"); fflush(freqfp);
             exit(EXIT_FAILURE);
         }
         printf("Selftest with RFC 7539 test vectors: PASSED.\n");
+        fprintf(freqfp, "Selftest with RFC 7539 test vectors: PASSED.\n\n"); fflush(freqfp);
 
         chacha20_init_context(&cc20ctx, key, nonce, 1);
         printf("Status initialization: OK.\n");
