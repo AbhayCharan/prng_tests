@@ -82,6 +82,9 @@ jobs:
         cat ./PractRand/${{env.LOG_FILE}} | grep "FAIL" > $LOGFILE || true 
         ERRORS=$(cat $LOGFILE | wc -l)
         if [ -s ${LOGFILE} ]; then echo "__Status__: Fail ❌ ( ${ERRORS} )" >> $GITHUB_STEP_SUMMARY; else echo "__Status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; fi
+        if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
+            if [ -s ./PractRand/${{env.LOG_FILE}} ]; then echo "__Selftest status__: Pass ✅" >> $GITHUB_STEP_SUMMARY; else echo "__Selftest status__: Fail ❌ " >> $GITHUB_STEP_SUMMARY; fi
+        fi
 
     - name: Show Stats and Analysis Report
       if: ${{ always() }}
