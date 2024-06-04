@@ -36,9 +36,6 @@ jobs:
     - name: Echo ENV parameters
       run: | 
         echo ${{ github.events.inputs.environment }}
-        if [ ${{inputs.generator_name}} = 'AKalashnikovaChaCha20' ]; then
-          ${{inputs.battery_name}} = 'NonStop'
-        fi
 
   main:
     name: Run test with the parameters
