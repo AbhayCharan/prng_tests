@@ -1,10 +1,3 @@
-#include <assert.h>
-#include <inttypes.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "AKalashnikovaChaCha20Core.c"
 
 int32_t main (void)
@@ -19,9 +12,11 @@ int32_t main (void)
         exit(EXIT_FAILURE);
     }
 
+    // Then initialize the context
     chacha20_init_context(&cc20ctx, key, nonce, 1);
     freopen(NULL, "wb", stdout);  // Only necessary on Windows, but harmless.
 
+    // And finally flood stdout with an endless CSPRN stream)
     while (1) {
         chacha20_block_next (&cc20ctx);
         fwrite(blkptr, blksize, 1, stdout);

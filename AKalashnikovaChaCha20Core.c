@@ -402,4 +402,3 @@ int chacha20_run_selftests (struct chacha20_context *ctx)
 
    return minunit_fail;
 }
-
